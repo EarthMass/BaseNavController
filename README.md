@@ -1,7 +1,7 @@
 # BaseNavController
 一个高度自定义的导航栏
 
-https://github.com/EarthMass/BaseNavController/blob/master/demo.png
+![image](https://github.com/EarthMass/BaseNavController/blob/master/demo.png)
  [self cusRightBtnVWithImageArr:@[@"searchIcon.png",@"hisIcon.png"] clickBlock:^(NSInteger index) {
         NSLog(@"cusRightBtnVWithImageArr click is %ld",(long)index);
     }];
