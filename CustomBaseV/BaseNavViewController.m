@@ -23,12 +23,16 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
 #define GNavBtnTitleColorSelect [UIColor colorWithWhite:0.806 alpha:1.000]
 
 //导航栏 颜色
-#define GNavBgColor [UIColor colorWithRed:0.213 green:0.551 blue:1.000 alpha:0.540]
+#define GNavBgColor [UIColor colorWithRed:0.213 green:0.551 blue:1.000 alpha:0.000]
 
 //默认导航 返回 按钮图标 名称
 #define GNavBackImageName @"nav_btn_back_def"
 
-@interface BaseNavViewController ()
+
+
+@interface BaseNavViewController () {
+    UINavigationBar * navBar;
+}
 
 @property (nonatomic, copy) GCusNavClickIndex cusNavClickIndex;
 /**
@@ -45,6 +49,8 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = GBackGroundColor;
+    
+    navBar = self.navigationController.navigationBar;
     
     self.canGesBack = YES;
     self.canRotate = NO;
@@ -68,7 +74,7 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
      */
     
     //导航栏 字体 字色 背景色
-    [self.navigationController.navigationBar
+    [navBar
      setTitleTextAttributes:
      @{
        NSForegroundColorAttributeName:GNavTextColor,
@@ -108,6 +114,14 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
     
 }
 
+#pragma mark- 刷新当前页面 导航条颜色
+- (void)refreshNavBgColor {
+    if (_navBarColor) {
+        self.navBarColor = _navBarColor;
+        self.navBarTranslucent = _navBarTranslucent;
+    }
+}
+
 #pragma mark- 隐藏状态栏 设置状态栏风格
 - (void)setHiddenStatusBarWhenRotate:(BOOL)hiddenStatusBarWhenRotate {
     _hiddenStatusBarWhenRotate = hiddenStatusBarWhenRotate;
@@ -141,24 +155,41 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
 
 - (void)setStatusBarTextIsWhite:(BOOL)isWhite {
     if (isWhite) { //白色
-        [self.navigationController.navigationBar setBarStyle:UIBarStyleBlack];
+        [navBar setBarStyle:UIBarStyleBlack];
     } else { //黑色
-        [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
+        [navBar setBarStyle:UIBarStyleDefault];
     }
     
 }
 #pragma mark- 导航栏颜色 透明否
 - (void)setNavBarColor:(UIColor *)navColor {
+    
     if ([[[UIDevice currentDevice] systemVersion] doubleValue] <7.0) {
         
-        [self.navigationController.navigationBar setTintColor:navColor];
+        [navBar setTintColor:navColor];
+        
     }else
     {
-        [self.navigationController.navigationBar setBarTintColor:navColor];
+        [navBar setBarTintColor:navColor];
     }
+    _navBarColor = navColor;
 }
 - (void)setNavBarTranslucent:(BOOL)translucent {
-    self.navigationController.navigationBar.translucent = translucent;
+    _navBarTranslucent = translucent;
+    navBar.translucent = translucent;
+    if (translucent) {
+
+       [navBar setBackgroundImage:[UIImage imageNamed:@"clearImage"] forBarMetrics:UIBarMetricsDefault];
+//        [navBar setShadowImage:[UIImage imageNamed:@"clearImage"]];
+
+    }
+    else {
+        
+         [navBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+        
+    }
+    
+
 }
 
 #pragma mark- 属性设置

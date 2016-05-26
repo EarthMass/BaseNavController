@@ -9,8 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "UINavigationItem+margin.h"
 
-#pragma mark- 导航栏一般一个程序就是一个风格 一个视图链 的导航栏是使用同一个【修改风格会整个都变化(背景颜色)】
-
 /**
  *  自定义右侧 按钮 点击事件
  *
@@ -46,8 +44,17 @@ typedef void(^GCusNavClickIndex)(NSInteger index);
 
 #pragma mark- 全局的 改变一个影响全部的视图,直到重新设置
 @property (nonatomic, assign) BOOL statusBarTextIsWhite; ///<状态栏字体颜色  默认白色
-@property (nonatomic, assign) UIColor * navBarColor; ///<导航栏颜色
-@property (nonatomic, assign) BOOL navBarTranslucent; ///<导航栏是否透明 【没什么用】
+@property (nonatomic, copy) UIColor * navBarColor; ///<导航栏颜色
+/**
+ *   YES 需要加这个 在当前控制器中 否则 导航栏底部显示的是window view起点从y = 64开始
+ *  #ifdef __IPHONE_7_0
+ - (UIRectEdge)edgesForExtendedLayout {
+ return UIRectEdgeTop;
+ }
+ #endif
+ view起点从y = 0开始
+ */
+@property (nonatomic, assign) BOOL navBarTranslucent; ///<导航栏是否透明 NO  YES 需要加这个[***顶部注释***] 在当前控制器中 否则 导航栏底部显示的是window view起点从y = 64开始
 
 /**
  *  设置 自定义的 导航栏 右侧 图片按钮【两个/一个】
@@ -63,5 +70,10 @@ typedef void(^GCusNavClickIndex)(NSInteger index);
 - (void)backBtnClick;
 - (void)centerBtnClick;
 - (void)rightBtnClick;
+
+/**
+ *  刷新当前 导航栏的颜色 当 下一级颜色不一样时
+ */
+- (void)refreshNavBgColor;
 
 @end

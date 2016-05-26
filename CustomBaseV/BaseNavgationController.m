@@ -8,6 +8,8 @@
 
 #import "BaseNavgationController.h"
 
+#import "BaseNavViewController.h"
+
 @interface BaseNavgationController ()<UIGestureRecognizerDelegate>
 
 @end
@@ -36,6 +38,31 @@
 //支持那些旋转方向（project设置的）
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return [self.visibleViewController supportedInterfaceOrientations];
+}
+
+#pragma mark- push - pop
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    [super pushViewController:viewController animated:animated];
+    [self.viewControllers indexOfObject:self.visibleViewController];
+}
+- (UIViewController *)popViewControllerAnimated:(BOOL)animated {
+
+    UIViewController * vc = [super popViewControllerAnimated:animated];
+
+    if (self.viewControllers.count == 1) { //一层 返回就是rootV
+        
+        if ([self.topViewController isKindOfClass:[BaseNavViewController class]]) {
+            typeof(BaseNavViewController) * beforeVC = (BaseNavViewController *)self.topViewController;
+            [beforeVC refreshNavBgColor];
+        }
+    } else { //多层
+        if ([[self.viewControllers objectAtIndex:self.viewControllers.count - 1] isKindOfClass:[BaseNavViewController class]]) {
+            typeof(BaseNavViewController) * beforeVC = (BaseNavViewController *)[self.viewControllers objectAtIndex:self.viewControllers.count - 1] ;
+            [beforeVC refreshNavBgColor];
+        }
+    }
+    
+    return vc;
 }
 
 - (void)didReceiveMemoryWarning {

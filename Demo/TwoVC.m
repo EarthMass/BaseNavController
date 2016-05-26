@@ -21,9 +21,8 @@
     
      self.title = @"到twoV";
     self.rightStr = @"地位饿";
-    [self setNavBarTranslucent:YES];
     
-
+    self.navBarColor = [UIColor yellowColor];
     
     self.titleV = ({
         UIView * cusView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 600, 40)];

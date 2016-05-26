@@ -8,6 +8,7 @@
 
 #import "OneVC.h"
 #import "UIButton+InBlock.h"
+#import "OneOneVC.h"
 
 @interface OneVC ()
 
@@ -25,6 +26,10 @@
 //    self.hiddenStatusBar = YES;
     self.hiddenStatusBarWhenRotate = YES;
     self.canRotate = YES;
+    
+    self.navBarTranslucent = YES;
+    
+//    self.navBarColor = [UIColor colorWithRed:1.000 green:1.000 blue:0.000 alpha:0.240];
     
 //    self.leftBtnV = ({
 //        UIView * cusView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
@@ -60,13 +65,13 @@
     });
  
     
-    UIButton * btn1 = [[UIButton alloc] initWithFrame:CGRectMake(10, 0, 100, 40)];
-    [btn1 setTitle:@"第一个导航栏" forState:UIControlStateNormal];
+    UIButton * btn1 = [[UIButton alloc] initWithFrame:CGRectMake(10, 64 - 10, 100, 40)];
+    [btn1 setTitle:@"next" forState:UIControlStateNormal];
     btn1.backgroundColor = [UIColor brownColor];
-//    [btn1 addTarget:self action:@selector(btn1) forControlEvents:UIControlEventTouchUpInside];
+    [btn1 addTarget:self action:@selector(btn1) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn1];
     
-    UIButton * btn2 = [[UIButton alloc] initWithFrame:CGRectMake(10, self.view.frame.size.height - 40 - 64, 100, 40)];
+    UIButton * btn2 = [[UIButton alloc] initWithFrame:CGRectMake(10, self.view.frame.size.height - 40, 100, 40)];
     [btn2 setTitle:@"第二个导航栏" forState:UIControlStateNormal];
     btn2.backgroundColor = [UIColor brownColor];
 //    [btn2 addTarget:self action:@selector(btn2) forControlEvents:UIControlEventTouchUpInside];
@@ -74,6 +79,17 @@
     
 //    [self hiddenStatusBar:YES animation:YES];
 }
+
+- (void)btn1 {
+    OneOneVC * oneoneVC = [[OneOneVC alloc] init];
+    [self.navigationController pushViewController:oneoneVC animated:YES];
+}
+
+#ifdef __IPHONE_7_0
+- (UIRectEdge)edgesForExtendedLayout {
+    return UIRectEdgeTop;
+}
+#endif
 
 - (void)backBtnClick {
 //    [super backBtnClick];
