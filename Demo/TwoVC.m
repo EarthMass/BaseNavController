@@ -21,8 +21,9 @@
     
      self.title = @"到twoV";
     self.rightStr = @"地位饿";
+    self.hiddenStatusBar = YES;
     
-    self.navBarColor = [UIColor yellowColor];
+    self.navBarColor = [UIColor colorWithRed:0.204 green:0.684 blue:0.970 alpha:1.000];
     
     self.titleV = ({
         UIView * cusView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 600, 40)];

@@ -28,10 +28,9 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
 //默认导航 返回 按钮图标 名称
 #define GNavBackImageName @"nav_btn_back_def"
 
-
-
 @interface BaseNavViewController () {
     UINavigationBar * navBar;
+    BOOL isVcBaseApper; ///< 导航的设置优先级
 }
 
 @property (nonatomic, copy) GCusNavClickIndex cusNavClickIndex;
@@ -50,19 +49,23 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
     // Do any additional setup after loading the view.
     self.view.backgroundColor = GBackGroundColor;
     
+    
     navBar = self.navigationController.navigationBar;
+    
+    //#pragma mark- 判断 导航的设置优先级 为 控制器 否则有些设置会无效
+    BOOL isVCBasedStatusBarAppearance = [[[NSBundle mainBundle]objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
+    //    NSAssert(isVCBasedStatusBarAppearance, @"*******BaseNavViewController已VC作为根视图 \n请在Info.plist中设置UIViewControllerBasedStatusBarAppearance 为YES---\n否则以AppDelegate中的设置为准*******");
+    
+    isVcBaseApper = (isVCBasedStatusBarAppearance)?YES:NO;
+    //
+    //#pragma mark-
     
     self.canGesBack = YES;
     self.canRotate = NO;
     self.titleViewCenter = YES;
     
     [self setNavInit];
-    
-#pragma mark- 判断 导航的设置优先级 为 控制器 否则有些设置会无效
-    BOOL isVCBasedStatusBarAppearance = [[[NSBundle mainBundle]objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
-    NSAssert(isVCBasedStatusBarAppearance, @"*******BaseNavViewController已VC作为根视图 \n请在Info.plist中设置UIViewControllerBasedStatusBarAppearance 为YES---\n否则以AppDelegate中的设置为准*******");
-    
-#pragma mark-
+
 }
 
 /**
@@ -119,6 +122,7 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
     if (_navBarColor) {
         self.navBarColor = _navBarColor;
         self.navBarTranslucent = _navBarTranslucent;
+        self.hiddenStatusBar = _hiddenStatusBar;
     }
 }
 
@@ -134,13 +138,19 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
     //    }
     _hiddenStatusBar = hidden;
     
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        
-        [self prefersStatusBarHidden];
-        
-        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
-        
+    if (!isVcBaseApper) {
+        [[UIApplication sharedApplication] setStatusBarHidden:hidden];
+    } else {
+        if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+            
+            [self prefersStatusBarHidden];
+            
+            [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+            
+        }
     }
+    
+   
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -154,12 +164,12 @@ static int fontSize = 18; ///<导航栏标题文字 字体大小
 
 
 - (void)setStatusBarTextIsWhite:(BOOL)isWhite {
-    if (isWhite) { //白色
-        [navBar setBarStyle:UIBarStyleBlack];
-    } else { //黑色
-        [navBar setBarStyle:UIBarStyleDefault];
+    if (!isVcBaseApper) {
+#warning 无效 在这之前已经 初始化过了,应该在AppDelegate中设置才有效
+        [[UINavigationBar appearance] setBarStyle:(isWhite)?UIBarStyleBlack:UIBarStyleDefault];
+    } else {
+        [navBar setBarStyle:(isWhite)?UIBarStyleBlack:UIBarStyleDefault];
     }
-    
 }
 #pragma mark- 导航栏颜色 透明否
 - (void)setNavBarColor:(UIColor *)navColor {

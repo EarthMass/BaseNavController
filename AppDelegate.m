@@ -23,6 +23,7 @@
     
 //    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 //    self.window.backgroundColor = [UIColor whiteColor];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     //自定导航栏
     BaseNavVCDemo * navView =  [[BaseNavVCDemo alloc] init];
